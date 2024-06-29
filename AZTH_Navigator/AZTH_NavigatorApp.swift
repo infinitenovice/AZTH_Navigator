@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct AZTH_NavigatorApp: App {
@@ -13,5 +14,7 @@ struct AZTH_NavigatorApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: SiteMarker.self,
+                        inMemory: true)
     }
 }

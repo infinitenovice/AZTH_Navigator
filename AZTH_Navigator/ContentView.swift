@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
+
+var grid = GridOverlay()
+
 
 struct ContentView: View {
     var body: some View {
         ZStack {
             MapView()
-            Text("Grid ID")
-                .font(.title)
-            Spacer()
         }
     }
 }

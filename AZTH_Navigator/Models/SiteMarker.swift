@@ -34,12 +34,18 @@ class SiteMarker: Identifiable {
     }
 }
 
-let SiteStatus: [String] = [
-        "Possible Site",
-        "Found",
-        "Found (Emergency)",
-        "Found (Out Of Order)",
-        "Starting Clue"
+struct SiteStatus {
+    var status: String
+    var color: Color
+}
+
+let siteStatus: [SiteStatus] = [
+    SiteStatus(status: "Possible Site",         color: Color.purple),
+    SiteStatus(status: "Found",                 color: Color.blue),
+    SiteStatus(status: "Found (Emergency)",     color: Color.yellow),
+    SiteStatus(status: "Found (Out Of Order)",  color: Color.teal),
+    SiteStatus(status: "Starting Clue",         color: Color.green),
+    SiteStatus(status: "Jackass",               color: Color.red)
     ]
 
 let ClueLetters: [String] = [

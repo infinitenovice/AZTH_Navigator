@@ -10,10 +10,12 @@ import SwiftData
 
 @main
 struct AZTH_NavigatorApp: App {
+    @State private var modelData = ModelData()
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .environment(modelData)
         .modelContainer(for: SiteMarker.self,
                         inMemory: true)
     }

@@ -14,10 +14,10 @@ struct MapButtonsView: View {
     @Binding var camera: MapCameraPosition
     var markerCount: Int
 
+
     var body: some View {
 
         var region: MKCoordinateRegion = camera.region ?? grid.region()
-        let zoomScale: Double = 0.5
         
         HStack {
             Spacer()
@@ -32,25 +32,14 @@ struct MapButtonsView: View {
                 
                 Button {
                     region = camera.region ?? grid.region()
-                    region.span.longitudeDelta = region.span.longitudeDelta * zoomScale
-                    region.span.latitudeDelta = region.span.latitudeDelta * zoomScale
+                    region = grid.cellRegion(coordinate: region.center)
                     camera = .region(region)
                 } label: {
-                    Image(systemName: "plus.magnifyingglass")
+                    Image(systemName: "sparkle.magnifyingglass")
                 }
                 .buttonStyle(.bordered)
                 .padding(.horizontal)
-                
-                Button {
-                    region = camera.region ?? grid.region()
-                    region.span.longitudeDelta = region.span.longitudeDelta * 1/zoomScale
-                    region.span.latitudeDelta = region.span.latitudeDelta * 1/zoomScale
-                    camera = .region(region)
-                } label: {
-                    Image(systemName: "minus.magnifyingglass")
-                }
-                .buttonStyle(.bordered)
-                .padding(.horizontal)
+                                               
                 
                 Button {
                     region = camera.region ?? grid.region()

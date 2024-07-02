@@ -10,7 +10,6 @@ import SwiftData
 
 var grid = GridOverlay()
 
-
 struct ContentView: View {
     var body: some View {
         ZStack {

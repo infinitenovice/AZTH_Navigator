@@ -6,32 +6,44 @@
 //
 
 import SwiftUI
-import MapKit
 import SwiftData
+import MapKit
 
 struct MapView: View {
+    @Environment(ModelData.self) var modelData
     @State private var camera: MapCameraPosition = .region(grid.region())
-    @State private var pinCoordinate: CLLocationCoordinate2D = grid.center
-    @State private var mapSelection: Int?    
+    @State private var markerSelection: Int? 
     @Query var siteMarkers: [SiteMarker]
 
+    
     var body: some View {
         ZStack {
             MapReader { proxy in
-                Map(position: $camera, selection: $mapSelection) {
+                Map(position: $camera, selection: $markerSelection) {
                     grid.overlay()
                     ForEach(siteMarkers) { siteMarker in
                         Marker(siteMarker.label, monogram: Text(ClueLetters[siteMarker.clueLetterIndex]), coordinate: siteMarker.coordinate)
                             .tag(siteMarker.id)
+                            .tint(siteStatus[siteMarker.statusIndex].color)
+                    }
+                    ForEach(modelData.calliperMarkers) { calliperMarker in
+                        MapCircle(center: calliperMarker.center, radius: calliperMarker.radius)
+                            .foregroundStyle(.blue.opacity(0.05))
+                            .stroke(.blue, lineWidth: 1.0)
+                        Annotation("",coordinate: calliperMarker.center) {Text("+")
+                            .foregroundColor(Color.blue)}
                     }
                 }
                 .mapStyle(.hybrid)
-                .onMapCameraChange { cameraContext in camera = .region(cameraContext.region)}
+                .onMapCameraChange { cameraContext in
+                    camera = .region(cameraContext.region)
+                }
             }
-            MapButtonsView(camera: $camera, markerCount: siteMarkers.count)
             CrossHairView()
-            if mapSelection != nil {
-                SiteDetailView(siteMarker: siteMarkers[mapSelection!], camera: $camera)
+            MapButtonsView(camera: $camera, markerCount: siteMarkers.count)
+            CalliperInputView(camera: $camera)
+            if markerSelection != nil {
+                SiteDetailView(siteMarker: siteMarkers[markerSelection!], camera: $camera)
             }
         }
     }
@@ -40,8 +52,10 @@ struct MapView: View {
 
 
 #Preview {
+    let modelData = ModelData()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return MapView()
+        .environment(modelData)
         .modelContainer(container)
 }

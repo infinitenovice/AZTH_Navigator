@@ -6,8 +6,9 @@
 //
 
 import MapKit
-/// Key Locations
-let WestWorld = CLLocationCoordinate2D(latitude: 33.63203, longitude: -111.88011)
+import SwiftUI
 
-/// Primary map region is defined by the hunt grid
+let WestWorld = CLLocationCoordinate2D(latitude: 33.63203, longitude: -111.88011)
+let mapInchesToMeters = 1609.344/2
+
 

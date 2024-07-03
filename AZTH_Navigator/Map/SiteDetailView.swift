@@ -22,7 +22,7 @@ struct SiteDetailView: View {
                         Spacer()
                         
                         Button {
-                            let region = camera.region ?? grid.region()
+                            let region = camera.region ?? GridRegion()
                             siteMarker.latitude = region.center.latitude
                             siteMarker.longitude = region.center.longitude
                             print("move")

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		291C16112C25B47200C6B5AD /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C16102C25B47200C6B5AD /* GridOverlay.swift */; };
 		2924B8B32C3431DC007FDC86 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2924B8B22C3431DC007FDC86 /* ModelData.swift */; };
+		2924B8B52C345C55007FDC86 /* GridModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2924B8B42C345C55007FDC86 /* GridModel.swift */; };
 		2933E4002C2B0F8000090F77 /* SiteMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2933E3FF2C2B0F8000090F77 /* SiteMarker.swift */; };
 		296F65A62C32012B00738AB3 /* CalliperMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296F65A52C32012B00738AB3 /* CalliperMarker.swift */; };
 		296F65AA2C32098F00738AB3 /* CalliperInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296F65A92C32098F00738AB3 /* CalliperInputView.swift */; };
@@ -26,8 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		291C16102C25B47200C6B5AD /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		2924B8B22C3431DC007FDC86 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		2924B8B42C345C55007FDC86 /* GridModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridModel.swift; sourceTree = "<group>"; };
 		2933E3FF2C2B0F8000090F77 /* SiteMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteMarker.swift; sourceTree = "<group>"; };
 		296F65A52C32012B00738AB3 /* CalliperMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalliperMarker.swift; sourceTree = "<group>"; };
 		296F65A92C32098F00738AB3 /* CalliperInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalliperInputView.swift; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 				298AFA3E2C24902D0035BA82 /* MapModel.swift */,
 				2933E3FF2C2B0F8000090F77 /* SiteMarker.swift */,
 				296F65A52C32012B00738AB3 /* CalliperMarker.swift */,
-				291C16102C25B47200C6B5AD /* GridOverlay.swift */,
+				2924B8B42C345C55007FDC86 /* GridModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -210,10 +210,10 @@
 				2933E4002C2B0F8000090F77 /* SiteMarker.swift in Sources */,
 				29B785FD2C21ED8D00262B3C /* ContentView.swift in Sources */,
 				29ADC16D2C28CF8A00603A92 /* DragPin.swift in Sources */,
+				2924B8B52C345C55007FDC86 /* GridModel.swift in Sources */,
 				298AFA3C2C248D300035BA82 /* MapView.swift in Sources */,
 				29ADC16F2C2AF4E500603A92 /* CrossHairView.swift in Sources */,
 				2987B8C22C2F028D00A61E9E /* SiteDetailView.swift in Sources */,
-				291C16112C25B47200C6B5AD /* GridOverlay.swift in Sources */,
 				296F65AA2C32098F00738AB3 /* CalliperInputView.swift in Sources */,
 				29B785FB2C21ED8D00262B3C /* AZTH_NavigatorApp.swift in Sources */,
 				296F65A62C32012B00738AB3 /* CalliperMarker.swift in Sources */,

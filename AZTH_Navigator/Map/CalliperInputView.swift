@@ -41,9 +41,9 @@ struct CalliperInputView: View {
                                     }
                                 } else {
                                     clearCount = 0
-                                    var marker: CalliperMarker = CalliperMarker(id: 0, center: grid.center, radius: 0.0)
-                                    let region = camera.region ?? grid.region()
-                                    marker.radius = radius * mapInchesToMeters
+                                    var marker: CalliperMarker = CalliperMarker(id: 0, center: GridCenter, radius: 0.0)
+                                    let region = camera.region ?? GridRegion()
+                                    marker.radius = radius * MapInch
                                     marker.center = region.center
                                     modelData.newCalliperMarker(marker: marker)
                                 }

@@ -17,13 +17,13 @@ struct MapButtonsView: View {
 
     var body: some View {
 
-        var region: MKCoordinateRegion = camera.region ?? grid.region()
+        var region: MKCoordinateRegion = camera.region ?? GridRegion()
         
         HStack {
             Spacer()
             VStack {
                 Button {
-                    camera = .region(grid.region())
+                    camera = .region(GridRegion())
                 } label: {
                     Image(systemName: "map")
                 }
@@ -31,8 +31,8 @@ struct MapButtonsView: View {
                 .padding(.horizontal)
                 
                 Button {
-                    region = camera.region ?? grid.region()
-                    region = grid.cellRegion(coordinate: region.center)
+                    region = camera.region ?? GridRegion()
+                    region = GridCellRegion(coordinate: region.center)
                     camera = .region(region)
                 } label: {
                     Image(systemName: "sparkle.magnifyingglass")
@@ -42,7 +42,7 @@ struct MapButtonsView: View {
                                                
                 
                 Button {
-                    region = camera.region ?? grid.region()
+                    region = camera.region ?? GridRegion()
                     let newMarker = SiteMarker(id: markerCount, latitude: region.center.latitude, longitude: region.center.longitude)
                     modelContext.insert(newMarker)
                 } label: {
@@ -65,6 +65,6 @@ struct MapButtonsView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
-    return MapButtonsView(camera: .constant(.region(grid.region())),markerCount: 0)
+    return MapButtonsView(camera: .constant(.region(GridRegion())),markerCount: 0)
         .modelContainer(container)
 }

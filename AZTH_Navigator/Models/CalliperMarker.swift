@@ -10,7 +10,7 @@ import MapKit
 
 struct CalliperMarker: Identifiable {
     var id: Int = 0
-    var center: CLLocationCoordinate2D = grid.center
+    var center: CLLocationCoordinate2D = GridCenter
     var radius: Double = 0.0
 }
 

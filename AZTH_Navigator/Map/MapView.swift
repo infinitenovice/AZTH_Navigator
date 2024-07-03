@@ -11,7 +11,7 @@ import MapKit
 
 struct MapView: View {
     @Environment(ModelData.self) var modelData
-    @State private var camera: MapCameraPosition = .region(grid.region())
+    @State private var camera: MapCameraPosition = .region(GridRegion())
     @State private var markerSelection: Int? 
     @Query var siteMarkers: [SiteMarker]
 
@@ -20,7 +20,12 @@ struct MapView: View {
         ZStack {
             MapReader { proxy in
                 Map(position: $camera, selection: $markerSelection) {
-                    grid.overlay()
+                    ForEach(modelData.gridLines) {gridline in
+                        MapPolyline(coordinates: gridline.points).stroke(.white, lineWidth: 1)
+                    }
+                    ForEach(modelData.gridLabels) {gridlabel in
+                        Annotation("",coordinate: gridlabel.point) {Text(gridlabel.label).foregroundStyle(.white).font(.title2)}
+                    }
                     ForEach(siteMarkers) { siteMarker in
                         Marker(siteMarker.label, monogram: Text(ClueLetters[siteMarker.clueLetterIndex]), coordinate: siteMarker.coordinate)
                             .tag(siteMarker.id)
@@ -33,6 +38,9 @@ struct MapView: View {
                         Annotation("",coordinate: calliperMarker.center) {Text("+")
                             .foregroundColor(Color.blue)}
                     }
+                }
+                .onAppear() {
+                    modelData.createGrid()
                 }
                 .mapStyle(.hybrid)
                 .onMapCameraChange { cameraContext in

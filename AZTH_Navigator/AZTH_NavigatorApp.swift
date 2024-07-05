@@ -17,6 +17,6 @@ struct AZTH_NavigatorApp: App {
         }
         .environment(modelData)
         .modelContainer(for: SiteMarker.self,
-                        inMemory: true)
+                        inMemory: false)
     }
 }

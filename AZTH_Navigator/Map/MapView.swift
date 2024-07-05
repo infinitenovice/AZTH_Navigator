@@ -33,10 +33,18 @@ struct MapView: View {
                     }
                     ForEach(modelData.calliperMarkers) { calliperMarker in
                         MapCircle(center: calliperMarker.center, radius: calliperMarker.radius)
-                            .foregroundStyle(.blue.opacity(0.05))
-                            .stroke(.blue, lineWidth: 1.0)
+                            .foregroundStyle(.clear)
+                            .stroke(.blue, lineWidth: 2)
                         Annotation("",coordinate: calliperMarker.center) {Text("+")
                             .foregroundColor(Color.blue)}
+                        let pointOnCircle: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: calliperMarker.center.latitude, longitude: calliperMarker.center.longitude+calliperMarker.radius*DegreesPerMeterLon)
+                        MapPolyline(coordinates: [calliperMarker.center,pointOnCircle]).stroke(.blue, lineWidth: 2)
+                        Annotation("",coordinate: pointOnCircle) {
+                            Text(String(Int(calliperMarker.radius*3.28084))+" ft")
+                                .foregroundColor(Color.white)
+                                .font(.footnote)
+//                                .frame(width: 100, height: 20, alignment: .trailing)
+                        }
                     }
                 }
                 .onAppear() {

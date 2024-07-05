@@ -75,7 +75,6 @@ class ModelData {
     
     func newCalliperMarker(marker: CalliperMarker) {
         calliperMarkers.append(marker)
-        print(calliperMarkers.count, markerID, marker.id)
         calliperMarkers[markerID].id = markerID
         markerID += 1
     }

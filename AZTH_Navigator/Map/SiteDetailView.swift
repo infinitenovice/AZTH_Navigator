@@ -8,10 +8,13 @@
 import SwiftUI
 import SwiftData
 import MapKit
+import Messages
 
 struct SiteDetailView: View {
     @Bindable var siteMarker: SiteMarker
     @Binding var camera: MapCameraPosition
+    @State private var isShowingMessages = false
+
 
     
     var body: some View {
@@ -33,11 +36,16 @@ struct SiteDetailView: View {
                         Spacer()
                         
                         Button {
-                            print("send")
+                            isShowingMessages = true
                         } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .buttonStyle(.bordered)
+                        .sheet(isPresented: self.$isShowingMessages) {
+                            MessageView(recipients: ["+14804400932"],
+                                        message: "http://maps.apple.com/?ll="+String(siteMarker.latitude)+","+String(siteMarker.longitude))
+                                .ignoresSafeArea()
+                        }
                         Spacer()
                         
                         Button {

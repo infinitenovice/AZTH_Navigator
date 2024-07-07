@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MapKit
 
 /*
  To Do:
@@ -39,10 +40,10 @@ struct ContentView: View {
 }
 
 #Preview {
-    let modelData = ModelData()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return ContentView()
-        .environment(modelData)
+        .environment(ModelData())
+        .environment(LocationManager())
         .modelContainer(container)
 }

@@ -11,13 +11,28 @@ import SwiftUI
 
 @Observable
 class ModelData {
-    var calliperMarkers: [CalliperMarker] = []
-    var gridLines: [GridLine] = []
-    var gridLabels: [GridLabel] = []
+    var camera: MapCameraPosition
+    var enableCallipers: Bool
+    var gridLines: [GridLine]
+    var gridLabels: [GridLabel]
+    var calliperMarkers: [CalliperMarker]
+    var markerSelection: Int?
+    var calliperMarkerID: Int
     
-    var markerID: Int = 0
+    var navigationActive: Bool
+    var targetDestination: MKPlacemark?
  
-    func createGrid() {
+    init() {
+        self.camera = .region(GridRegion())
+        self.enableCallipers = false
+        self.gridLines  = []
+        self.gridLabels  = []
+        self.calliperMarkers  = []
+        self.markerSelection = nil
+        self.calliperMarkerID = 0
+        self.navigationActive = false
+        self.targetDestination = nil
+        
         var gridLine: GridLine = GridLine(id: 0, points: [])
         var gridLabel: GridLabel = GridLabel(id: 0, label: "", point: CLLocationCoordinate2D(latitude: 0, longitude: 0))
         var p1: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -75,12 +90,12 @@ class ModelData {
     
     func newCalliperMarker(marker: CalliperMarker) {
         calliperMarkers.append(marker)
-        calliperMarkers[markerID].id = markerID
-        markerID += 1
+        calliperMarkers[calliperMarkerID].id = calliperMarkerID
+        calliperMarkerID += 1
     }
     
     func clearCalliperMarkers() {
         calliperMarkers.removeAll()
-        markerID = 0
+        calliperMarkerID = 0
     }
 }

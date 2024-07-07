@@ -14,7 +14,8 @@ let RadiusEarth = 6378137.0 //meters
 let DegreesPerMeterLon = 1/((Double.pi/180)*RadiusEarth*cos(GridCenter.latitude*Double.pi/180))
 let DegreesPerMeterLat = 1/((Double.pi/180)*RadiusEarth)
 
-let GridCenter: CLLocationCoordinate2D = CLLocationCoordinate2D (latitude: 33.75500, longitude: -111.96700)
+let GridCenter: CLLocationCoordinate2D = CLLocationCoordinate2D (latitude: 34.24336, longitude: -110.08219)
+//let GridCenter: CLLocationCoordinate2D = CLLocationCoordinate2D (latitude: 33.75500, longitude: -111.96700)
 let GridCellWidth: CLLocationDegrees = Mile*DegreesPerMeterLon
 let GridCellHeight: CLLocationDegrees = Mile*DegreesPerMeterLat
 let GridBoundaryNorth: CLLocationDegrees = GridCenter.latitude + Double(GridRows.count)/2 * GridCellHeight
@@ -46,14 +47,15 @@ func GridRegion() -> MKCoordinateRegion {
 }
 
 func GridCellRegion(coordinate: CLLocationCoordinate2D) -> MKCoordinateRegion {
-    var cell: CellCoordinates = CellCoordinates(row: 0, col: 0)
-    var center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+//    var cell: CellCoordinates = CellCoordinates(row: 0, col: 0)
+//    var center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     
-    cell = cellCoordinates(coordinate: coordinate)
-    center.latitude = GridBoundaryNorth - GridCellHeight * (Double(cell.row) + 0.5)
-    center.longitude = GridBoundaryWest + GridCellWidth * (Double(cell.col) + 0.5)
+//    cell = cellCoordinates(coordinate: coordinate)
+//    center.latitude = GridBoundaryNorth - GridCellHeight * (Double(cell.row) + 0.5)
+//    center.longitude = GridBoundaryWest + GridCellWidth * (Double(cell.col) + 0.5)
     return MKCoordinateRegion(
-        center: center,
+//        center: center,
+        center: coordinate,
         span: MKCoordinateSpan(
             latitudeDelta: GridCellHeight * 1.5,
             longitudeDelta: GridCellWidth * 1.5)

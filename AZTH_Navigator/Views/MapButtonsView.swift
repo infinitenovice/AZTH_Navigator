@@ -10,61 +10,60 @@ import MapKit
 import SwiftData
 
 struct MapButtonsView: View {
+    
     @Environment(\.modelContext) private var modelContext
-    @Binding var camera: MapCameraPosition
-    var markerCount: Int
+    @Environment(ModelData.self) var modelData
+    @Query var siteMarkers: [SiteMarker]
 
 
     var body: some View {
 
-        var region: MKCoordinateRegion = camera.region ?? GridRegion()
+        var region: MKCoordinateRegion = modelData.camera.region ?? GridRegion()
         
         HStack {
             Spacer()
             VStack {
                 Button {
-                    camera = .region(GridRegion())
+                    modelData.camera = .region(GridRegion())
                 } label: {
                     Image(systemName: "map")
                 }
-                .buttonStyle(.bordered)
                 .padding(.horizontal)
                 
                 Button {
-                    region = camera.region ?? GridRegion()
+                    region = modelData.camera.region ?? GridRegion()
                     region = GridCellRegion(coordinate: region.center)
-                    camera = .region(region)
+                    modelData.camera = .region(region)
                 } label: {
                     Image(systemName: "sparkle.magnifyingglass")
                 }
-                .buttonStyle(.bordered)
                 .padding(.horizontal)
                                                
                 
                 Button {
-                    region = camera.region ?? GridRegion()
-                    let newMarker = SiteMarker(id: markerCount, latitude: region.center.latitude, longitude: region.center.longitude)
+                    region = modelData.camera.region ?? GridRegion()
+                    let newMarker = SiteMarker(id: siteMarkers.count, latitude: region.center.latitude, longitude: region.center.longitude)
                     modelContext.insert(newMarker)
                 } label: {
                     Image(systemName: "mappin.circle")
                 }
-                .buttonStyle(.bordered)
                 .padding(.horizontal)
                 
                 Spacer()
             }
+            .buttonStyle(.bordered)
             .foregroundColor(.white)
             .font(.title)
-
-
+            .tint(.gray)
         }
-
     }
 }
 
 #Preview {
+    let modelData = ModelData()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
-    return MapButtonsView(camera: .constant(.region(GridRegion())),markerCount: 0)
+    return MapButtonsView()
+        .environment(modelData)
         .modelContainer(container)
 }

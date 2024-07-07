@@ -1,5 +1,5 @@
 //
-//  MessageView.swift
+//  MessageSender.swift
 //  MessageTest
 //
 //  Created by Infinite Novice on 7/4/24.
@@ -9,7 +9,7 @@
 import SwiftUI
 import MessageUI
 
-struct MessageView: UIViewControllerRepresentable {
+struct MessageSender: UIViewControllerRepresentable {
     var recipients: [String]
     var message: String
     
@@ -44,3 +44,4 @@ struct MessageView: UIViewControllerRepresentable {
     
     typealias UIViewControllerType = MFMessageComposeViewController
 }
+

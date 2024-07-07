@@ -12,12 +12,15 @@ import Messages
 
 struct SiteDetailView: View {
     @Bindable var siteMarker: SiteMarker
-    @Binding var camera: MapCameraPosition
+    
+    @Environment(ModelData.self) var modelData
+    @Query var siteMarkers: [SiteMarker]
     @State private var isShowingMessages = false
-
 
     
     var body: some View {
+        
+        
         HStack {
             VStack {
                 Group {
@@ -25,10 +28,9 @@ struct SiteDetailView: View {
                         Spacer()
                         
                         Button {
-                            let region = camera.region ?? GridRegion()
+                            let region = modelData.camera.region ?? GridRegion()
                             siteMarker.latitude = region.center.latitude
                             siteMarker.longitude = region.center.longitude
-                            print("move")
                         } label: {
                             Image(systemName: "move.3d")
                         }
@@ -42,14 +44,15 @@ struct SiteDetailView: View {
                         }
                         .buttonStyle(.bordered)
                         .sheet(isPresented: self.$isShowingMessages) {
-                            MessageView(recipients: ["+14804400932"],
-                                        message: "http://maps.apple.com/?ll="+String(siteMarker.latitude)+","+String(siteMarker.longitude))
-                                .ignoresSafeArea()
+                            MessageSender(recipients: ["+14804400932"],
+                                          message: "http://maps.apple.com/?ll="+String(siteMarker.latitude)+","+String(siteMarker.longitude))
+                            .ignoresSafeArea()
                         }
                         Spacer()
                         
                         Button {
-                            print("navigate")
+                            modelData.targetDestination = MKPlacemark(coordinate:  CLLocationCoordinate2D(latitude: siteMarker.latitude, longitude: siteMarker.longitude))
+                            modelData.navigationActive = true
                         } label: {
                             Image(systemName: "car.circle")
                         }
@@ -58,8 +61,8 @@ struct SiteDetailView: View {
                     }
                     .font(.title)
                     .foregroundColor(.white)
-                        .frame(width: 300,height: 50)
-//                        .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
+                    .frame(width: 300,height: 50)
+        //            .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
                     List {
                         Picker("Clue Letter", selection: $siteMarker.clueLetterIndex) {
                             ForEach((0..<ClueLetters.count), id: \.self) {
@@ -73,14 +76,26 @@ struct SiteDetailView: View {
                         }
                     }
                     .frame(width: 300,height: 90)
-//                    .border(Color.black)
+        //            .border(Color.black)
                     .listStyle(.plain)
                 }
                 Spacer()
             }
-            .background(.clear)
             Spacer()
         }
+        
     }
 }
+    
 
+
+#Preview {
+    let modelData = ModelData()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
+    let siteMarker: SiteMarker = SiteMarker(id: 0, latitude: 0, longitude: 0)
+    modelData.markerSelection = 0
+    return SiteDetailView(siteMarker: siteMarker)
+        .environment(modelData)
+        .modelContainer(container)
+}

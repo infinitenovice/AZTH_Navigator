@@ -10,7 +10,9 @@ import SwiftData
 
 @main
 struct AZTH_NavigatorApp: App {
-    @State private var modelData = ModelData()
+    @State private var calliperModel = CalliperModel()
+    @State private var navigationModel = NavigationModel()
+    @State private var mapModel = MapModel()
     @State private var locationManager = LocationManager()
     var body: some Scene {
         WindowGroup {
@@ -20,7 +22,9 @@ struct AZTH_NavigatorApp: App {
                 LocationDeniedView()
             }
         }
-        .environment(modelData)
+        .environment(calliperModel)
+        .environment(navigationModel)
+        .environment(mapModel)
         .environment(locationManager)
         .modelContainer(for: SiteMarker.self,
                         inMemory: false)

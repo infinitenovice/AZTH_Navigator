@@ -12,28 +12,24 @@ import SwiftData
 struct MapButtonsView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Environment(ModelData.self) var modelData
+    @Environment(MapModel.self) var mapModel
     @Query var siteMarkers: [SiteMarker]
 
 
     var body: some View {
-
-        var region: MKCoordinateRegion = modelData.camera.region ?? GridRegion()
         
         HStack {
             Spacer()
             VStack {
                 Button {
-                    modelData.camera = .region(GridRegion())
+                    mapModel.gridZoom()
                 } label: {
                     Image(systemName: "map")
                 }
                 .padding(.horizontal)
                 
                 Button {
-                    region = modelData.camera.region ?? GridRegion()
-                    region = GridCellRegion(coordinate: region.center)
-                    modelData.camera = .region(region)
+                    mapModel.sparkleZoom()
                 } label: {
                     Image(systemName: "sparkle.magnifyingglass")
                 }
@@ -41,7 +37,7 @@ struct MapButtonsView: View {
                                                
                 
                 Button {
-                    region = modelData.camera.region ?? GridRegion()
+                    let region = mapModel.region()
                     let newMarker = SiteMarker(id: siteMarkers.count, latitude: region.center.latitude, longitude: region.center.longitude)
                     modelContext.insert(newMarker)
                 } label: {
@@ -60,10 +56,12 @@ struct MapButtonsView: View {
 }
 
 #Preview {
-    let modelData = ModelData()
+    let mapModel = MapModel()
+    let locationManager = LocationManager()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return MapButtonsView()
-        .environment(modelData)
+        .environment(mapModel)
+        .environment(locationManager)
         .modelContainer(container)
 }

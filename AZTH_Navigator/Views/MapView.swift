@@ -11,27 +11,24 @@ import MapKit
 
 struct MapView: View {
     
-    @Environment(ModelData.self) var modelData
+    @Environment(MapModel.self) var mapModel
+    @Environment(CalliperModel.self) var calliperModel
+    @Environment(NavigationModel.self) var navigationModel
     @Environment(LocationManager.self) var locationManager
     @Query var siteMarkers: [SiteMarker]
-    
-//    @State private var routeEnd:  MKMapItem?
-    @State private var route: MKRoute?
-    @State private var travelTime: TimeInterval?
-
-
+    @State var grid = GridModel()
     
     var body: some View {
-        @Bindable var modelData = modelData
+        @Bindable var mapModel = mapModel
+
         ZStack {
             MapReader { proxy in
-                //                Map(position: $camera, selection: $markerSelection) {
-                Map(position: $modelData.camera, selection: $modelData.markerSelection) {
+                Map(position: $mapModel.camera, selection: $mapModel.markerSelection) {
                     UserAnnotation()
-                    ForEach(modelData.gridLines) {gridline in
+                    ForEach(grid.lines) {gridline in
                         MapPolyline(coordinates: gridline.points).stroke(.white, lineWidth: 1)
                     }
-                    ForEach(modelData.gridLabels) {gridlabel in
+                    ForEach(grid.labels) {gridlabel in
                         Annotation("",coordinate: gridlabel.point) {Text(gridlabel.label).foregroundStyle(.white).font(.title2)}
                     }
                     ForEach(siteMarkers) { siteMarker in
@@ -39,7 +36,7 @@ struct MapView: View {
                             .tag(siteMarker.id)
                             .tint(siteStatus[siteMarker.statusIndex].color)
                     }
-                    ForEach(modelData.calliperMarkers) { calliperMarker in
+                    ForEach(calliperModel.markers) { calliperMarker in
                         MapCircle(center: calliperMarker.center, radius: calliperMarker.radius)
                             .foregroundStyle(.clear)
                             .stroke(.blue, lineWidth: 2)
@@ -53,60 +50,53 @@ struct MapView: View {
                                 .font(.footnote)
                         }
                     }
-                    if let route, modelData.navigationActive {
-                        MapPolyline(route.polyline)
+                    if let routePolyline = navigationModel.routePolyline {
+                        MapPolyline(routePolyline)
                             .stroke(.blue,lineWidth: 6)
                     }
                 }
                 .mapStyle(.hybrid)
                 .onMapCameraChange { cameraContext in
-                    modelData.camera = .region(cameraContext.region)
+                    mapModel.camera = .region(cameraContext.region)
                 }
-                .task(id: modelData.targetDestination) {
-                    if modelData.targetDestination != nil {
-                        route = nil
-                        await fetchRoute()
+                .task(id: navigationModel.targetDestination) {
+                    if navigationModel.targetDestination != nil {
+                        navigationModel.route = nil
+                        await navigationModel.fetchRoute(locationManager: locationManager)
+                    }
+                }
+                .task(id: locationManager.userLocation) {
+                    if navigationModel.route != nil {
+//                        await NavigationManager.fetchRoute(mapModel: mapModel, locationManager: locationManager)
                     }
                 }
             }
             CrossHairView()
             ControlsView()
             MapButtonsView()
-            if modelData.navigationActive {
+            if navigationModel.route != nil {
                 NavigationView()
             }
-            if modelData.markerSelection != nil {
-                SiteDetailView(siteMarker: siteMarkers[modelData.markerSelection!])
+            if mapModel.markerSelection != nil {
+                SiteDetailView(siteMarker: siteMarkers[mapModel.markerSelection!])
              
             }
-        }
-    }
-    
-    func fetchRoute() async {
-        if let userLocation = locationManager.userLocation, let targetDestination = modelData.targetDestination {
-            let request = MKDirections.Request()
-            let startPlacemark = MKPlacemark(coordinate: userLocation.coordinate)
-            let endPlacemark = MKPlacemark(coordinate: targetDestination.coordinate)
-            let routeStart = MKMapItem(placemark: startPlacemark)
-            let routeEnd = MKMapItem(placemark: endPlacemark)
-            request.source = routeStart
-            request.destination = routeEnd
-            request.transportType = .automobile
-            let directions = MKDirections(request: request)
-            let result = try? await directions.calculate()
-            route = result?.routes.first
-            travelTime = route?.expectedTravelTime
         }
     }
 }
 
 
 #Preview {
-    @State var camera: MapCameraPosition = .region(GridRegion())
+    let calliperModel = CalliperModel()
+    let mapModel = MapModel()
+    let navigationModel = NavigationModel()
+    let locationManager = LocationManager()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return MapView()
-        .environment(ModelData())
-        .environment(LocationManager())
+        .environment(calliperModel)
+        .environment(mapModel)
+        .environment(navigationModel)
+        .environment(locationManager)
         .modelContainer(container)
 }

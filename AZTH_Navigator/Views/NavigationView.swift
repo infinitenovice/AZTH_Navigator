@@ -6,42 +6,55 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct NavigationView: View {
-    @Environment(ModelData.self) var modelData
+    @Environment(MapModel.self) var mapModel
+    @Environment(NavigationModel.self) var navigationModel
 
     var body: some View {
-        
         HStack {
             VStack {
                 Spacer()
-                HStack {
-                    Button {
-                        modelData.navigationActive = false
-                        modelData.targetDestination = nil
-                    }label: {
-                        Image(systemName: "xmark.circle")
+                VStack {
+                    HStack {
+                        Text("Time to Site:")
+                            .padding(.leading)
+                        Text(navigationModel.routeTime())
+                        Spacer()
+                        Button {
+                            navigationModel.clearRoute()
+                        }label: {
+                            Image(systemName: "xmark.circle")
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(.black)
+                        .tint(.gray)
                     }
-                    .buttonStyle(.bordered)
-                    .foregroundColor(.black)
-                    .font(.title)
-                    .tint(.gray)
-                    Text("Navigation steps here")
-                        .font(.title2)
-                        .foregroundStyle(.black)
+                    Divider()
+                    VStack {
+//                        Text(navigationModel.stepDistance())
+                        Text(navigationModel.stepInstruction())
+                            .lineLimit(2)
+                    }
+                    Spacer()
                 }
-                .frame(width: 350, height:100, alignment: .leading)
+                .foregroundStyle(.black)
+                .frame(width: 350, height:160, alignment: .leading)
                 .background(.gray)
                 .cornerRadius(15)
                 .padding()
+                .font(.title2)
             }
             Spacer()
         }
     }
-    
 }
 
 #Preview {
-    NavigationView()
-        .environment(ModelData())
+    let mapModel = MapModel()
+    let navigation = NavigationModel()
+    return NavigationView()
+        .environment(mapModel)
+        .environment(navigation)
 }

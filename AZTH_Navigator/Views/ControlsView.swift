@@ -8,7 +8,8 @@ import SwiftUI
 import MapKit
 
 struct ControlsView: View {
-    @Environment(ModelData.self) var modelData
+    @Environment(MapModel.self) var mapModel
+    @Environment(CalliperModel.self) var calliperModel
     @State private var input = ""
     @State private var iconColor = Color.black
     @State private var clearCount: Int = 0
@@ -31,7 +32,7 @@ struct ControlsView: View {
                     .sheet(isPresented: $settingsSheetShowing) {
                         SettingsView()
                     }
-                    if modelData.enableCallipers {
+                    if calliperModel.enable {
                         Image(systemName: "compass.drawing")
                             .font(.title)
                             .foregroundColor(iconColor)
@@ -51,15 +52,15 @@ struct ControlsView: View {
                                         if radius < 0.002 {
                                             clearCount += 1
                                             if clearCount == 3 {
-                                                modelData.clearCalliperMarkers()
+                                                calliperModel.clearMarkers()
                                             }
                                         } else {
                                             clearCount = 0
                                             var marker: CalliperMarker = CalliperMarker(id: 0, center: GridCenter, radius: 0.0)
-                                            let region = modelData.camera.region ?? GridRegion()
+                                            let region = mapModel.region()
                                             marker.radius = radius * MapInch
                                             marker.center = region.center
-                                            modelData.newCalliperMarker(marker: marker)
+                                            calliperModel.newMarker(marker: marker)
                                         }
                                     }
                                     input = ""
@@ -75,7 +76,9 @@ struct ControlsView: View {
 }
 
 #Preview {
-    let modelData = ModelData()
+    let calliperModel = CalliperModel()
+    let mapModel = MapModel()
     return ControlsView()
-        .environment(modelData)
+        .environment(calliperModel)
+        .environment(mapModel)
 }

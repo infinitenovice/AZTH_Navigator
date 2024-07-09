@@ -13,7 +13,8 @@ import Messages
 struct SiteDetailView: View {
     @Bindable var siteMarker: SiteMarker
     
-    @Environment(ModelData.self) var modelData
+    @Environment(MapModel.self) var mapModel
+    @Environment(NavigationModel.self) var navigationModel
     @Query var siteMarkers: [SiteMarker]
     @State private var isShowingMessages = false
 
@@ -28,7 +29,7 @@ struct SiteDetailView: View {
                         Spacer()
                         
                         Button {
-                            let region = modelData.camera.region ?? GridRegion()
+                            let region = mapModel.region()
                             siteMarker.latitude = region.center.latitude
                             siteMarker.longitude = region.center.longitude
                         } label: {
@@ -51,8 +52,7 @@ struct SiteDetailView: View {
                         Spacer()
                         
                         Button {
-                            modelData.targetDestination = MKPlacemark(coordinate:  CLLocationCoordinate2D(latitude: siteMarker.latitude, longitude: siteMarker.longitude))
-                            modelData.navigationActive = true
+                            navigationModel.targetDestination = MKPlacemark(coordinate:  CLLocationCoordinate2D(latitude: siteMarker.latitude, longitude: siteMarker.longitude))
                         } label: {
                             Image(systemName: "car.circle")
                         }
@@ -62,7 +62,6 @@ struct SiteDetailView: View {
                     .font(.title)
                     .foregroundColor(.white)
                     .frame(width: 300,height: 50)
-        //            .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
                     List {
                         Picker("Clue Letter", selection: $siteMarker.clueLetterIndex) {
                             ForEach((0..<ClueLetters.count), id: \.self) {
@@ -76,7 +75,6 @@ struct SiteDetailView: View {
                         }
                     }
                     .frame(width: 300,height: 90)
-        //            .border(Color.black)
                     .listStyle(.plain)
                 }
                 Spacer()
@@ -90,12 +88,18 @@ struct SiteDetailView: View {
 
 
 #Preview {
-    let modelData = ModelData()
+    let calliperModel = CalliperModel()
+    let mapModel = MapModel()
+    let navigationModel = NavigationModel()
+    let locationManager = LocationManager()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     let siteMarker: SiteMarker = SiteMarker(id: 0, latitude: 0, longitude: 0)
-    modelData.markerSelection = 0
+    mapModel.markerSelection = 0
     return SiteDetailView(siteMarker: siteMarker)
-        .environment(modelData)
+        .environment(calliperModel)
+        .environment(mapModel)
+        .environment(navigationModel)
+        .environment(locationManager)
         .modelContainer(container)
 }

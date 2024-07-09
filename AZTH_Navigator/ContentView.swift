@@ -40,10 +40,16 @@ struct ContentView: View {
 }
 
 #Preview {
+    let calliperModel = CalliperModel()
+    let mapModel = MapModel()
+    let navigationModel = NavigationModel()
+    let locationManager = LocationManager()
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return ContentView()
-        .environment(ModelData())
-        .environment(LocationManager())
+        .environment(calliperModel)
+        .environment(mapModel)
+        .environment(navigationModel)
+        .environment(locationManager)
         .modelContainer(container)
 }

@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(ModelData.self) var modelData
-    
+    @Environment(MapModel.self) var mapModel
+    @Environment(CalliperModel.self) var calliperModel
+
     var body: some View {
-        @Bindable var modelData = modelData
+        @Bindable var mapModel = mapModel
+        @Bindable var calliperModel = calliperModel
 
         
         VStack {
             List(0..<1) { item in
-                Toggle(isOn: $modelData.enableCallipers) {
+                Toggle(isOn: $calliperModel.enable) {
                     Text("Enable Calliper Input")
                 }
                 .padding()
@@ -27,7 +29,9 @@ struct SettingsView: View {
 }
 
 #Preview {
-    let modelData = ModelData()
+    let calliperModel = CalliperModel()
+    let mapModel = MapModel()
     return SettingsView()
-        .environment(modelData)
+        .environment(calliperModel)
+        .environment(mapModel)
 }

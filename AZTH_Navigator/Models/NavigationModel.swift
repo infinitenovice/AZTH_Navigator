@@ -6,26 +6,39 @@
 //
 
 import MapKit
+import SwiftUI
 
 @Observable
 class NavigationModel {
     var targetDestination: MKPlacemark?
     var route: MKRoute?
-    var routePolyline: MKPolyline?
-    var routeInstructions: [String]?
- 
+    var steps: [MKRoute.Step]
+    var stepInstructions: String?
+    var stepStartLocation: CLLocationCoordinate2D?
+    var stepEndLocation: CLLocationCoordinate2D?
+    var stepTotalDistance: CLLocationDistance?
+    var stepRemainingDistance: CLLocationDistance?
+
     init() {
-        self.targetDestination = nil
-        self.route = nil
-        self.routePolyline = nil
-        self.routeInstructions = nil
+        targetDestination = nil
+        route = nil
+        steps = []
+        stepInstructions = nil
+        stepStartLocation = nil
+        stepEndLocation = nil
+        stepTotalDistance = nil
+        stepRemainingDistance = nil
     }
     
     func clearRoute() {
-        self.targetDestination = nil
-        self.route = nil
-        self.routePolyline = nil
-        self.routeInstructions = nil
+        targetDestination = nil
+        route = nil
+        steps.removeAll()
+        stepInstructions = nil
+        stepStartLocation = nil
+        stepEndLocation = nil
+        stepTotalDistance = nil
+        stepRemainingDistance = nil
     }
     
     
@@ -42,35 +55,64 @@ class NavigationModel {
             let directions = MKDirections(request: request)
             let result = try? await directions.calculate()
             route = result?.routes.first
-            routePolyline = route?.polyline
+            steps = route!.steps
+            nextStep()
         }
     }
     
-    func stepInstruction() -> String {
-        if let stepInstruction = route?.steps[1].instructions {
-            return stepInstruction
+    
+    func nextStep() {
+        if !steps.isEmpty {
+            steps.remove(at: 0)
+        }
+        if !steps.isEmpty {
+            let coordinates = steps[0].polyline.coordinates
+            stepStartLocation = coordinates.first
+            stepEndLocation = coordinates.last
+            stepInstructions = steps[0].instructions
         } else {
-            return "No Route"
+            stepStartLocation = stepEndLocation
+            stepEndLocation = targetDestination?.coordinate
+            stepInstructions = "Proceed on foot"
+        }
+        stepTotalDistance = stepStartLocation?.distance(from: stepEndLocation!)
+        stepRemainingDistance = stepTotalDistance
+    }
+    
+    func updateStepRemainingDistance(locationManager: LocationManager) {
+        if stepEndLocation != nil {
+            let distanceTraveled = locationManager.userLocation?.coordinate.distance(from: stepStartLocation!)
+            stepRemainingDistance = stepTotalDistance! - distanceTraveled!
+            if stepTotalDistance! <= 0 {
+                nextStep()
+            }
         }
     }
     
-    func routeTime() -> String {
-        if route != nil {
-            let formatter = DateComponentsFormatter()
-            formatter.allowedUnits = [.minute, .second]
-            formatter.unitsStyle = .abbreviated
-            return formatter.string(from: route!.expectedTravelTime)!
-        } else {
-            return "--m --s"
-        }
+//    func routeTime() -> String {
+//        if route != nil {
+//            let formatter = DateComponentsFormatter()
+//            formatter.allowedUnits = [.minute, .second]
+//            formatter.unitsStyle = .abbreviated
+//            return formatter.string(from: route!.expectedTravelTime)!
+//        } else {
+//            return "--m --s"
+//        }
+//    }
+}
+
+public extension MKMultiPoint {
+    var coordinates: [CLLocationCoordinate2D] {
+        var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid,
+                                              count: pointCount)
+        getCoordinates(&coords, range: NSRange(location: 0, length: pointCount))
+        return coords
     }
-    
-    func stepDistance(locationManager: LocationManager) -> String {
-        var stepDistance: String = "--"
-        if let userLocation = locationManager.userLocation {
-//            let distance = userLocation.distance(from: routePolyline?.coordinate)
-//            stepDistance = String(Int(distance * 3.28084))
-        }
-        return stepDistance + " ft"
+}
+
+public extension CLLocationCoordinate2D {
+    func distance(from: CLLocationCoordinate2D) -> CLLocationDistance {
+        let destination=CLLocation(latitude:from.latitude,longitude:from.longitude)
+        return CLLocation(latitude: latitude, longitude: longitude).distance(from: destination)
     }
 }

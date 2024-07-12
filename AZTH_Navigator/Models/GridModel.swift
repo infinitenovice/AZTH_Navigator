@@ -11,23 +11,24 @@ import MapKit
 
 let GridCenter: CLLocationCoordinate2D = CLLocationCoordinate2D (latitude: 34.24336, longitude: -110.08219)
 //let GridCenter: CLLocationCoordinate2D = CLLocationCoordinate2D (latitude: 33.75500, longitude: -111.96700)
-let GridRegion = MKCoordinateRegion(center: GridCenter, latitudinalMeters: Double(GridRows+3)*Mile, longitudinalMeters: Double(GridColumns+3)*Mile)
+let GridRegion = MKCoordinateRegion(center: GridCenter, latitudinalMeters: Double(GridRows+3)*MetersPerMile, longitudinalMeters: Double(GridColumns+3)*MetersPerMile)
 let GridRows = 16
 let GridColumns = 20
 
 let WestWorld = CLLocationCoordinate2D(latitude: 33.63203, longitude: -111.88011)
-let Mile = 1609.344 //meters
+let MetersPerMile = 1609.344 //meters
+let FeetPerMeter = 3.28084
 let RadiusEarth = 6378137.0 //meters
-let MapInch = Mile/2
+let MapInch = MetersPerMile/2
 let DegreesPerMeterLon = 1/((Double.pi/180)*RadiusEarth*cos(GridCenter.latitude*Double.pi/180))
 let DegreesPerMeterLat = 1/((Double.pi/180)*RadiusEarth)
 
-let cellWidth: CLLocationDegrees = Mile*DegreesPerMeterLon
-let cellHeight: CLLocationDegrees = Mile*DegreesPerMeterLat
-let boundaryNorth = GridCenter.latitude + Double(GridRows)*Mile*DegreesPerMeterLat/2
-let boundarySouth = GridCenter.latitude - Double(GridRows)*Mile*DegreesPerMeterLat/2
-let boundaryEast = GridCenter.longitude + Double(GridColumns)*Mile*DegreesPerMeterLon/2
-let boundaryWest = GridCenter.longitude - Double(GridColumns)*Mile*DegreesPerMeterLon/2
+let cellWidth: CLLocationDegrees = MetersPerMile*DegreesPerMeterLon
+let cellHeight: CLLocationDegrees = MetersPerMile*DegreesPerMeterLat
+let boundaryNorth = GridCenter.latitude + Double(GridRows)*MetersPerMile*DegreesPerMeterLat/2
+let boundarySouth = GridCenter.latitude - Double(GridRows)*MetersPerMile*DegreesPerMeterLat/2
+let boundaryEast = GridCenter.longitude + Double(GridColumns)*MetersPerMile*DegreesPerMeterLon/2
+let boundaryWest = GridCenter.longitude - Double(GridColumns)*MetersPerMile*DegreesPerMeterLon/2
 
 
 struct GridModel {

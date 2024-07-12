@@ -10,8 +10,8 @@ import SwiftUI
 struct LocationDeniedView: View {
     var body: some View {
         ContentUnavailableView(
-            label: {Label("Enable Location Services", image: "Jackass1")},
-            description: {Text("Settings -> Privacy & Security -> Location Services")},
+            label: {Label("Hey, Jackass!", image: "Jackass1")},
+            description: {Text("You have to enable location services")},
             actions: {
                 Button {
                     UIApplication.shared.open(

@@ -10,7 +10,7 @@ import MapKit
 
 @Observable
 class CalliperModel {
-    var enable: Bool = false
+    var enable: Bool = true
     var markers: [CalliperMarker] = []
     @ObservationIgnored var markerID: Int = 0
     

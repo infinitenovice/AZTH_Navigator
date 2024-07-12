@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 @main
-struct AZTH_NavigatorApp: App {
-    @State private var calliperModel = CalliperModel()
-    @State private var navigationModel = NavigationModel()
+struct KickAssApp: App {
     @State private var mapModel = MapModel()
     @State private var locationManager = LocationManager()
+    @State private var navigationModel = NavigationModel()
+    @State private var calliperModel = CalliperModel()
     var body: some Scene {
         WindowGroup {
             if locationManager.isAuthorized {

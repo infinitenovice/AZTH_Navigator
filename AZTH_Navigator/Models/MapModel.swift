@@ -12,6 +12,7 @@ import SwiftUI
 class MapModel {
     var camera: MapCameraPosition
     var markerSelection: Int?
+    var selectedMarkerLocation: CLLocationCoordinate2D?
  
     init() {
         camera = .region(GridRegion)
@@ -23,13 +24,24 @@ class MapModel {
     }
     
     func sparkleZoom() {
-        var region = self.region()
-        region.span.longitudeDelta = 2*Mile*DegreesPerMeterLon
-        region.span.latitudeDelta = 2*Mile*DegreesPerMeterLat
-        self.camera = .region(region)
+        withAnimation {
+            var region = self.region()
+            if selectedMarkerLocation != nil {
+                region.center = selectedMarkerLocation!
+                region.span.longitudeDelta = 0
+                region.span.latitudeDelta = 0
+            } else {
+                let zoomScale = 1.5
+                region.span.longitudeDelta = zoomScale*MetersPerMile*DegreesPerMeterLon
+                region.span.latitudeDelta = zoomScale*MetersPerMile*DegreesPerMeterLat
+            }
+            self.camera = .region(region)
+        }
     }
     
     func gridZoom() {
-        self.camera = .region(GridRegion)
+        withAnimation {
+            self.camera = .region(GridRegion)
+        }
     }
 }

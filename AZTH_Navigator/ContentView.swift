@@ -12,26 +12,27 @@ import MapKit
 /*
  To Do:
  - Add Navigation
- - Add icloud
+    - Test step functionality with live location data
+    - add settings toggle for route step markers
  - add Hunt Clocks
  - add Hunt Status
- - distribution list
+ - add distribution list
+ - add data reset capability
+ - App icon
+ - App start page
  Maybe Do:
+ - add error circles around selected marker
  - Delete Map Markers
  - Site marker notes
- - Mensurating cursor
- - zoom to selected marker
  - add westworld as a default marker
- - change grid-center zoom behavior
- - App start page
- - App icon
- Good enough for now:
- - add distribution MSG/mail
- - Calliper input/keyboard control
- - calliper distance displayed vs shading
+ Possible Future Improvements
+ - Add icloud to support simultaneous users
+ - Mensurating cursor
  */
 
 struct ContentView: View {
+    
+    
     var body: some View {
         ZStack {
             MapView()

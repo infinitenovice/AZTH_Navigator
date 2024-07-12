@@ -11,6 +11,7 @@ import MapKit
 struct NavigationView: View {
     @Environment(MapModel.self) var mapModel
     @Environment(NavigationModel.self) var navigationModel
+    @Environment(LocationManager.self) var locationManager
 
     var body: some View {
         HStack {
@@ -18,9 +19,14 @@ struct NavigationView: View {
                 Spacer()
                 VStack {
                     HStack {
-                        Text("Time to Site:")
-                            .padding(.leading)
-                        Text(navigationModel.routeTime())
+                        Button {
+                            navigationModel.nextStep()
+                        } label: {
+                            Text("Step")
+                                .padding()
+                        }
+                        Spacer()
+                        Text(String(Int((navigationModel.stepRemainingDistance ?? 0)*FeetPerMeter)))
                         Spacer()
                         Button {
                             navigationModel.clearRoute()
@@ -34,7 +40,7 @@ struct NavigationView: View {
                     Divider()
                     VStack {
 //                        Text(navigationModel.stepDistance())
-                        Text(navigationModel.stepInstruction())
+                        Text(navigationModel.stepInstructions ?? "End of Route")
                             .lineLimit(2)
                     }
                     Spacer()
@@ -48,13 +54,18 @@ struct NavigationView: View {
             }
             Spacer()
         }
+        .onChange(of: locationManager.userLocation) { oldValue, newValue in
+            navigationModel.updateStepRemainingDistance(locationManager: locationManager)
+        }
     }
 }
 
 #Preview {
     let mapModel = MapModel()
     let navigation = NavigationModel()
+    let locationManager = LocationManager()
     return NavigationView()
         .environment(mapModel)
         .environment(navigation)
+        .environment(locationManager)
 }

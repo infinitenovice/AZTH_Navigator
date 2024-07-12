@@ -50,9 +50,27 @@ struct MapView: View {
                                 .font(.footnote)
                         }
                     }
-                    if let routePolyline = navigationModel.routePolyline {
-                        MapPolyline(routePolyline)
-                            .stroke(.blue,lineWidth: 6)
+                
+                    if navigationModel.route != nil {
+//                        MapPolyline(navigationModel.route!.polyline)
+//                            .stroke(.blue,lineWidth: 6)
+                        ForEach(navigationModel.steps, id: \.self) { step in
+                            MapPolyline(step.polyline)
+                                .stroke(.blue,lineWidth: 6)
+
+                        }
+                        if let coord = navigationModel.stepStartLocation {
+                            Annotation("",coordinate: coord) {
+                                Text("X")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                        if let coord = navigationModel.stepEndLocation {
+                            Annotation("",coordinate: coord) {
+                                Text("X")
+                                    .foregroundColor(.red)
+                            }
+                        }
                     }
                 }
                 .mapStyle(.hybrid)
@@ -65,9 +83,11 @@ struct MapView: View {
                         await navigationModel.fetchRoute(locationManager: locationManager)
                     }
                 }
-                .task(id: locationManager.userLocation) {
-                    if navigationModel.route != nil {
-//                        await NavigationManager.fetchRoute(mapModel: mapModel, locationManager: locationManager)
+                .onChange(of: mapModel.markerSelection) { oldValue, newValue in
+                    if newValue != nil {
+                        mapModel.selectedMarkerLocation = siteMarkers[mapModel.markerSelection!].coordinate
+                    } else {
+                        mapModel.selectedMarkerLocation = nil
                     }
                 }
             }
@@ -79,7 +99,6 @@ struct MapView: View {
             }
             if mapModel.markerSelection != nil {
                 SiteDetailView(siteMarker: siteMarkers[mapModel.markerSelection!])
-             
             }
         }
     }

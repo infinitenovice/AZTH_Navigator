@@ -81,6 +81,9 @@ struct SiteDetailView: View {
             }
             Spacer()
         }
+//        .onAppear() {
+//            mapModel.selectedMarkerLocation = siteMarker.coordinate
+//        }
         
     }
 }

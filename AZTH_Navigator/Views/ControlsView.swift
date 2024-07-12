@@ -22,6 +22,44 @@ struct ControlsView: View {
             VStack {
                 Spacer()
                 HStack {
+
+                    if calliperModel.enable {
+                        ZStack {
+                            Image(systemName: "compass.drawing")
+                                .font(.title)
+                                .foregroundColor(iconColor)
+                            TextField("", text: $input)
+                                .tint(.black)
+                                .font(.title2)
+                                .frame(width:27)
+                                .foregroundColor(.clear)
+                                .onKeyPress { press in
+                                    iconColor = Color.blue
+                                    input += press.characters
+                                    if input[input.index(before: input.endIndex)] == "\r" {
+                                        input = input.trimmingCharacters(in: .whitespacesAndNewlines)
+                                        if let radius = Double(input) {
+                                            if radius < 0.002 {
+                                                clearCount += 1
+                                                if clearCount == 3 {
+                                                    calliperModel.clearMarkers()
+                                                }
+                                            } else {
+                                                clearCount = 0
+                                                var marker: CalliperMarker = CalliperMarker(id: 0, center: GridCenter, radius: 0.0)
+                                                let region = mapModel.region()
+                                                marker.radius = radius * MapInch
+                                                marker.center = region.center
+                                                calliperModel.newMarker(marker: marker)
+                                            }
+                                        }
+                                        input = ""
+                                        iconColor = Color.black
+                                }
+                                return .handled
+                            }
+                        }
+                    }
                     Button {
                         settingsSheetShowing = true
                     } label: {
@@ -31,43 +69,6 @@ struct ControlsView: View {
                     }
                     .sheet(isPresented: $settingsSheetShowing) {
                         SettingsView()
-                    }
-                    if calliperModel.enable {
-                        Image(systemName: "compass.drawing")
-                            .font(.title)
-                            .foregroundColor(iconColor)
-                        TextField("", text: $input)
-                            .tint(.black)
-                            .font(.title3)
-                            .frame(width:40)
-                            .border(Color.black)
-                            .padding([.trailing])
-                            .foregroundColor(.gray)
-                            .onKeyPress { press in
-                                iconColor = Color.blue
-                                input += press.characters
-                                if input[input.index(before: input.endIndex)] == "\r" {
-                                    input = input.trimmingCharacters(in: .whitespacesAndNewlines)
-                                    if let radius = Double(input) {
-                                        if radius < 0.002 {
-                                            clearCount += 1
-                                            if clearCount == 3 {
-                                                calliperModel.clearMarkers()
-                                            }
-                                        } else {
-                                            clearCount = 0
-                                            var marker: CalliperMarker = CalliperMarker(id: 0, center: GridCenter, radius: 0.0)
-                                            let region = mapModel.region()
-                                            marker.radius = radius * MapInch
-                                            marker.center = region.center
-                                            calliperModel.newMarker(marker: marker)
-                                        }
-                                    }
-                                    input = ""
-                                    iconColor = Color.black
-                                }
-                                return .handled
-                            }
                     }
                 }
             }

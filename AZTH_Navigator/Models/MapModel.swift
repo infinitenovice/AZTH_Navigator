@@ -13,7 +13,9 @@ class MapModel {
     var camera: MapCameraPosition
     var markerSelection: Int?
     var selectedMarkerLocation: CLLocationCoordinate2D?
- 
+    let maxZoom: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.00155, longitudeDelta: 0.003038)
+    let gridCellZoom: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: MetersPerMile*DegreesPerMeterLat, longitudeDelta: 1.25*MetersPerMile*DegreesPerMeterLon)
+
     init() {
         camera = .region(GridRegion)
         self.markerSelection = nil
@@ -28,12 +30,9 @@ class MapModel {
             var region = self.region()
             if selectedMarkerLocation != nil {
                 region.center = selectedMarkerLocation!
-                region.span.longitudeDelta = 0
-                region.span.latitudeDelta = 0
+                region.span = maxZoom
             } else {
-                let zoomScale = 1.5
-                region.span.longitudeDelta = zoomScale*MetersPerMile*DegreesPerMeterLon
-                region.span.latitudeDelta = zoomScale*MetersPerMile*DegreesPerMeterLat
+                region.span = gridCellZoom
             }
             self.camera = .region(region)
         }
@@ -41,7 +40,13 @@ class MapModel {
     
     func gridZoom() {
         withAnimation {
-            self.camera = .region(GridRegion)
+            var region = self.region()
+            if region.span.longitudeDelta == GridRegion.span.longitudeDelta {
+                self.camera = .region(GridRegion)
+            } else {
+                region.span = GridRegion.span
+                self.camera = .region(region)
+            }
         }
     }
 }

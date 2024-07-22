@@ -11,7 +11,8 @@ struct CrossHairView: View {
     var body: some View {
         let targetDiameter = 3.0
         let dashLength = 8.0
-        let strokeWidth = 1.0
+        let strokeWidth = 3.0
+        let rotation = 0.0
         ZStack {
             HStack {
                 Rectangle()
@@ -35,6 +36,7 @@ struct CrossHairView: View {
             }
         }
         .foregroundColor(.red)
+        .rotationEffect(.degrees(rotation))
     }
 }
 

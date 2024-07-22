@@ -13,21 +13,23 @@ import MapKit
  To Do:
  - Add Navigation
     - Test step functionality with live location data
-    - add settings toggle for route step markers
  - add Hunt Clocks
  - add Hunt Status
- - add distribution list
- - add data reset capability
  - App icon
  - App start page
+ - add westworld as a default marker
+ - add path recording
+ - refactor settings, distribution list
  Maybe Do:
+ - add settings toggle for route step markers
+ - add heading indicator
  - add error circles around selected marker
  - Delete Map Markers
  - Site marker notes
- - add westworld as a default marker
  Possible Future Improvements
  - Add icloud to support simultaneous users
  - Mensurating cursor
+ - hunt data archiving
  */
 
 struct ContentView: View {
@@ -41,6 +43,7 @@ struct ContentView: View {
 }
 
 #Preview {
+    let settingsModel = SettingsModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -48,6 +51,7 @@ struct ContentView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return ContentView()
+        .environment(settingsModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)

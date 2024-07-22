@@ -15,6 +15,7 @@ struct SiteDetailView: View {
     
     @Environment(MapModel.self) var mapModel
     @Environment(NavigationModel.self) var navigationModel
+    @Environment(SettingsModel.self) var settingsModel
     @Query var siteMarkers: [SiteMarker]
     @State private var isShowingMessages = false
 
@@ -35,7 +36,7 @@ struct SiteDetailView: View {
                         } label: {
                             Image(systemName: "move.3d")
                         }
-                        .buttonStyle(.bordered)
+
                         Spacer()
                         
                         Button {
@@ -43,9 +44,8 @@ struct SiteDetailView: View {
                         } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
-                        .buttonStyle(.bordered)
                         .sheet(isPresented: self.$isShowingMessages) {
-                            MessageSender(recipients: ["+14804400932"],
+                            MessageSender(recipients: settingsModel.DistributionList,
                                           message: "http://maps.apple.com/?ll="+String(siteMarker.latitude)+","+String(siteMarker.longitude))
                             .ignoresSafeArea()
                         }
@@ -56,9 +56,11 @@ struct SiteDetailView: View {
                         } label: {
                             Image(systemName: "car.circle")
                         }
-                        .buttonStyle(.bordered)
+
                         Spacer()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.mapButton)
                     .font(.title)
                     .foregroundColor(.white)
                     .frame(width: 300,height: 50)
@@ -76,11 +78,14 @@ struct SiteDetailView: View {
                     }
                     .frame(width: 300,height: 90)
                     .listStyle(.plain)
+                    .cornerRadius(15)
                 }
                 Spacer()
             }
             Spacer()
         }
+
+        .padding(.horizontal)
 //        .onAppear() {
 //            mapModel.selectedMarkerLocation = siteMarker.coordinate
 //        }
@@ -91,6 +96,7 @@ struct SiteDetailView: View {
 
 
 #Preview {
+    let settingsModel = SettingsModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -104,5 +110,6 @@ struct SiteDetailView: View {
         .environment(mapModel)
         .environment(navigationModel)
         .environment(locationManager)
+        .environment(settingsModel)
         .modelContainer(container)
 }

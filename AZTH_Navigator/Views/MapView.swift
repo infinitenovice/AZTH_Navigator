@@ -52,8 +52,6 @@ struct MapView: View {
                     }
                 
                     if navigationModel.route != nil {
-//                        MapPolyline(navigationModel.route!.polyline)
-//                            .stroke(.blue,lineWidth: 6)
                         ForEach(navigationModel.steps, id: \.self) { step in
                             MapPolyline(step.polyline)
                                 .stroke(.blue,lineWidth: 6)
@@ -74,6 +72,7 @@ struct MapView: View {
                     }
                 }
                 .mapStyle(.hybrid)
+                .mapControlVisibility(.hidden)
                 .onMapCameraChange { cameraContext in
                     mapModel.camera = .region(cameraContext.region)
                 }
@@ -91,6 +90,7 @@ struct MapView: View {
                     }
                 }
             }
+            HuntInfoView()
             CrossHairView()
             ControlsView()
             MapButtonsView()
@@ -106,6 +106,8 @@ struct MapView: View {
 
 
 #Preview {
+    let huntInfoModel = HuntInfoModel()
+    let settingsModel = SettingsModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -113,6 +115,8 @@ struct MapView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return MapView()
+        .environment(huntInfoModel)
+        .environment(settingsModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)

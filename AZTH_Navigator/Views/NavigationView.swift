@@ -16,44 +16,46 @@ struct NavigationView: View {
     var body: some View {
         HStack {
             VStack {
-                Spacer()
+                Spacer(minLength: 500)
                 VStack {
                     HStack {
                         Button {
                             navigationModel.nextStep()
                         } label: {
                             Text("Step")
-                                .padding()
+                                .padding(.leading)
                         }
                         Spacer()
-                        Text(String(Int((navigationModel.stepRemainingDistance ?? 0)*FeetPerMeter)))
+                        Text(String(Int((navigationModel.stepRemainingDistance ?? 0)*FeetPerMeter))+" ft")
                         Spacer()
                         Button {
                             navigationModel.clearRoute()
                         }label: {
                             Image(systemName: "xmark.circle")
                         }
-                        .buttonStyle(.bordered)
-                        .foregroundColor(.black)
-                        .tint(.gray)
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding()
                     }
-                    Divider()
+  
                     VStack {
-//                        Text(navigationModel.stepDistance())
                         Text(navigationModel.stepInstructions ?? "End of Route")
                             .lineLimit(2)
                     }
                     Spacer()
                 }
-                .foregroundStyle(.black)
-                .frame(width: 350, height:160, alignment: .leading)
-                .background(.gray)
+                .foregroundStyle(.white)
+                .frame(width: 300, height:140, alignment: .leading)
+                .background(.black)
                 .cornerRadius(15)
-                .padding()
-                .font(.title2)
+//                Spacer()
+                .padding(.bottom)
+                .padding(.bottom)
+                .padding(.bottom)
             }
             Spacer()
         }
+        .padding(.leading)
         .onChange(of: locationManager.userLocation) { oldValue, newValue in
             navigationModel.updateStepRemainingDistance(locationManager: locationManager)
         }

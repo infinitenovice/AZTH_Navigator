@@ -10,7 +10,7 @@ import MapKit
 import SwiftData
 
 struct MapButtonsView: View {
-    
+
     @Environment(\.modelContext) private var modelContext
     @Environment(MapModel.self) var mapModel
     @Query var siteMarkers: [SiteMarker]
@@ -21,20 +21,18 @@ struct MapButtonsView: View {
         HStack {
             Spacer()
             VStack {
+                
                 Button {
                     mapModel.gridZoom()
                 } label: {
                     Image(systemName: "map")
                 }
-                .padding(.horizontal)
-                
+
                 Button {
                     mapModel.sparkleZoom()
                 } label: {
                     Image(systemName: "sparkle.magnifyingglass")
                 }
-                .padding(.horizontal)
-                                               
                 
                 Button {
                     let region = mapModel.region()
@@ -43,15 +41,21 @@ struct MapButtonsView: View {
                 } label: {
                     Image(systemName: "mappin.circle")
                 }
-                .padding(.horizontal)
                 
                 Spacer()
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderedProminent)
             .foregroundColor(.white)
             .font(.title)
-            .tint(.gray)
+            .tint(.mapButton)
+            .padding(.horizontal)
         }
+    }
+}
+
+extension Color {
+    public static var mapButton: Color {
+        return Color(UIColor(red: 31/255, green: 40/255, blue: 41/255, alpha: 0.8))
     }
 }
 

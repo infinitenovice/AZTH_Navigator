@@ -67,6 +67,7 @@ struct ControlsView: View {
                             .font(.title)
                             .foregroundColor(.black)
                     }
+                    .padding(.trailing)
                     .sheet(isPresented: $settingsSheetShowing) {
                         SettingsView()
                     }
@@ -77,9 +78,11 @@ struct ControlsView: View {
 }
 
 #Preview {
+    let settingsModel = SettingsModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     return ControlsView()
         .environment(calliperModel)
         .environment(mapModel)
+        .environment(settingsModel)
 }

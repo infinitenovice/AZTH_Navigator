@@ -43,7 +43,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    let settingsModel = SettingsModel()
+    let huntModel = HuntModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -51,7 +51,7 @@ struct ContentView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return ContentView()
-        .environment(settingsModel)
+        .environment(huntModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)

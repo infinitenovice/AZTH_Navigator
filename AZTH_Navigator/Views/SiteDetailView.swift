@@ -14,8 +14,8 @@ struct SiteDetailView: View {
     @Bindable var siteMarker: SiteMarker
     
     @Environment(MapModel.self) var mapModel
+    @Environment(HuntModel.self) var huntModel
     @Environment(NavigationModel.self) var navigationModel
-    @Environment(SettingsModel.self) var settingsModel
     @Query var siteMarkers: [SiteMarker]
     @State private var isShowingMessages = false
 
@@ -45,7 +45,7 @@ struct SiteDetailView: View {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .sheet(isPresented: self.$isShowingMessages) {
-                            MessageSender(recipients: settingsModel.DistributionList,
+                            MessageSender(recipients: huntModel.phoneList,
                                           message: "http://maps.apple.com/?ll="+String(siteMarker.latitude)+","+String(siteMarker.longitude))
                             .ignoresSafeArea()
                         }
@@ -96,7 +96,7 @@ struct SiteDetailView: View {
 
 
 #Preview {
-    let settingsModel = SettingsModel()
+    let huntModel = HuntModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -106,10 +106,10 @@ struct SiteDetailView: View {
     let siteMarker: SiteMarker = SiteMarker(id: 0, latitude: 0, longitude: 0)
     mapModel.markerSelection = 0
     return SiteDetailView(siteMarker: siteMarker)
+        .environment(huntModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)
         .environment(locationManager)
-        .environment(settingsModel)
         .modelContainer(container)
 }

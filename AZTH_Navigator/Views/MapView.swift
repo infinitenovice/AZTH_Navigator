@@ -90,7 +90,7 @@ struct MapView: View {
                     }
                 }
             }
-            HuntInfoView()
+            HuntStatusView()
             CrossHairView()
             ControlsView()
             MapButtonsView()
@@ -106,8 +106,7 @@ struct MapView: View {
 
 
 #Preview {
-    let huntInfoModel = HuntInfoModel()
-    let settingsModel = SettingsModel()
+    let huntModel = HuntModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -115,8 +114,7 @@ struct MapView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return MapView()
-        .environment(huntInfoModel)
-        .environment(settingsModel)
+        .environment(huntModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)

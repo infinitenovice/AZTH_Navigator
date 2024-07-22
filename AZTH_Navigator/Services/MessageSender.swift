@@ -10,7 +10,7 @@ import SwiftUI
 import MessageUI
 
 struct MessageSender: UIViewControllerRepresentable {
-    var recipients: [Recipient]
+    var recipients: [String]
     var message: String
     
     class Coordinator: NSObject, MFMessageComposeViewControllerDelegate {
@@ -32,11 +32,7 @@ struct MessageSender: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> MFMessageComposeViewController {
         let vc = MFMessageComposeViewController()
-        var recipientList: [String] = []
-        for recipient in recipients {
-            recipientList.append(recipient.phoneNumber)
-        }
-        vc.recipients = recipientList
+        vc.recipients = recipients
         vc.body = message
         vc.messageComposeDelegate = context.coordinator
         return vc

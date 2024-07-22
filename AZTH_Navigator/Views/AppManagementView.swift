@@ -13,7 +13,7 @@ struct AppManagementView: View {
     @State var enableManagement: Bool = false
 
     var body: some View {
-        List {
+        Form {
             Section(header: Text("App Management")) {
                 Toggle(isOn: $enableManagement) {
                     Text("Enable Management Functions")
@@ -32,11 +32,12 @@ struct AppManagementView: View {
                 }
             }
         }
+        .font(.title)
+        .padding()
     }
 }
 
 #Preview {
-    let settingsModel = SettingsModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     let navigationModel = NavigationModel()
@@ -44,7 +45,6 @@ struct AppManagementView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SiteMarker.self, configurations: config)
     return AppManagementView()
-        .environment(settingsModel)
         .environment(calliperModel)
         .environment(mapModel)
         .environment(navigationModel)

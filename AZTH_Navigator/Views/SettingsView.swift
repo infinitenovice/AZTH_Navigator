@@ -10,28 +10,29 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(MapModel.self) var mapModel
     @Environment(CalliperModel.self) var calliperModel
-    @Environment(SettingsModel.self) var settingsModel
 
     var body: some View {
         @Bindable var mapModel = mapModel
         @Bindable var calliperModel = calliperModel
-        @Bindable var  settingsModel = settingsModel
 
         
-        VStack {
-            HuntInfoEditView()
-//            DistributionListView()
-//            AppManagementView()
+        ScrollView {
+            VStack(spacing: 20) {
+                HuntEditView()
+                    .frame(height: 700)
+                AppManagementView()
+                    .frame(height: 700)
+            }
         }
     }
 }
 
 #Preview {
-    let settingsModel = SettingsModel()
+    let huntModel = HuntModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     return SettingsView()
         .environment(calliperModel)
         .environment(mapModel)
-        .environment(settingsModel)
+        .environment(huntModel)
 }

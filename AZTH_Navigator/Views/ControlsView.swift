@@ -10,6 +10,7 @@ import MapKit
 struct ControlsView: View {
     @Environment(MapModel.self) var mapModel
     @Environment(CalliperModel.self) var calliperModel
+    @Environment(HuntModel.self) var huntModel
     @State private var input = ""
     @State private var iconColor = Color.black
     @State private var clearCount: Int = 0
@@ -68,7 +69,7 @@ struct ControlsView: View {
                             .foregroundColor(.black)
                     }
                     .padding(.trailing)
-                    .sheet(isPresented: $settingsSheetShowing) {
+                    .sheet(isPresented: $settingsSheetShowing, onDismiss: {huntModel.save()}) {
                         SettingsView()
                     }
                 }
@@ -78,11 +79,11 @@ struct ControlsView: View {
 }
 
 #Preview {
-    let settingsModel = SettingsModel()
+    let huntModel = HuntModel()
     let calliperModel = CalliperModel()
     let mapModel = MapModel()
     return ControlsView()
+        .environment(huntModel)
         .environment(calliperModel)
         .environment(mapModel)
-        .environment(settingsModel)
 }

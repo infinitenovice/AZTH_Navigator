@@ -14,8 +14,7 @@ struct KickAssApp: App {
     @State private var locationManager = LocationManager()
     @State private var navigationModel = NavigationModel()
     @State private var calliperModel = CalliperModel()
-    @State private var settingsModel = SettingsModel()
-    @State private var huntInfoModel = HuntInfoModel()
+    @State private var huntModel = HuntModel()
     var body: some Scene {
         WindowGroup {
             if locationManager.isAuthorized {
@@ -24,8 +23,7 @@ struct KickAssApp: App {
                 LocationDeniedView()
             }
         }
-        .environment(huntInfoModel)
-        .environment(settingsModel)
+        .environment(huntModel)
         .environment(calliperModel)
         .environment(navigationModel)
         .environment(mapModel)
